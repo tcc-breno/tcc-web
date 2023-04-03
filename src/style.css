@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat';
+}
+
+.react-flow__attribution{
+    display: none;
+}
+
+.react-flow__handle {
+    background: transparent;
+    border: none;
+}
+
+.base_page{
+    width: 100vw;
+    height: 100vh;
+}

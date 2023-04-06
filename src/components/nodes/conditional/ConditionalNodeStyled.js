@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StartNodeStyled = styled.div`
+export const ConditionalNodeStyled = styled.div`
   
     background-color: #4b4bbb;
     width: 100px;

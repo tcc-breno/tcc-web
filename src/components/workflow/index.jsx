@@ -1,59 +1,138 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable */
+import React, {useEffect, useState} from 'react';
 import ReactFlow, { useNodesState, useEdgesState, MiniMap, Controls, Background, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 import {ConditionalNode} from '../nodes/conditional/CustomConditionalNode';
+//{ id: 'e1-2', source: '1', target: '2', makerEnd: {type: MarkerType.ArrowClosed}, animated:true},
 
-export const InteractionFlow = () => {
-  const nodeTypes = { conditional: ConditionalNode };
+const FINAL_KEY = "final";
+const TASK_KEY  = "task";
+const START_KEY = "start";
+const CONDITIONAL_KEY = "conditional"
 
-  const initialNode = "1"
+const onNodeClick = (event, node) => alert(JSON.stringify(node));
 
-  let initialNodes = [
-    { id: '1',  type: 'initial',           details: {nextNode: "2"},           data: { label: 'START' } },
-    { id: '2',  type: 'conditional',    details: {nextNode: ["23","4"]},    data: { label: '2' } },
-    { id: '23', type: 'task',           details: {nextNode: "5"},           data: { label: '2' } },
-    { id: '4',  type: 'task',           details: {nextNode: "5"},           data: { label: '4' } },
-    { id: '4',  type: 'final', data: { label: 'FINAL' } },
-  ];
+const getColumn = (columnName, columns) => {
+  return columns[columnName]
+}
+const getColumnPosition = (columnName, columns) => {
+  let currentColumn = getColumn(columnName, columns)
+  return (columnName === "central") ? currentColumn : (getColumnPosition(currentColumn.baseColumn, columns) + currentColumn.gap)
+}
 
-  let initialEdges = [
-      //  { id: 'e1-2', source: '1', target: '2', markerEnd: {type: MarkerType.ArrowClosed}, animated:true},
-      //  { id: '1-2',  source: '1', target: '4', markerEnd: {type: MarkerType.ArrowClosed}, animated:false}
-  ];
-  let columns  = {"central": 500  }
+let isEqualToCentralPosition = (columns, currentPosition) => {
+  return centralPosition === currentPosition;
+}
 
-  const setInitialNodes = (arrayOfNodes) => {
-    let remainingNodes = arrayOfNodes;
-    let selectedNodes  = [];
-    let currentNode = initialNodes.filter(node => node.id == initialNode);
+let columnCanBeAtCenter = (length) => {
+  return ((length%2) === 0)
+}
 
-    while(remainingNodes.length > 0){
+// const formatEdge = (parentNodeId, currentNodeId) => {
+//   return {
+//     id: `e${parentNodeId}-${currentNodeId}`,
+//     source: parentNodeId, target: currentNodeId,
+//     makerEnd: {type: MarkerType.ArrowClosed}, animated:false}
+// }
+
+export const InteractionFlow = ({initialNodes, initialNode}) => {
+  const nodeTypes = { conditional: ConditionalNode, start: ConditionalNode, task: ConditionalNode, final: ConditionalNode};
+
+  const [columns]  = useState({"central": 260, "lCentral":{baseColumn: "central", gap: -110} })
+
+  const [nodes, setNodes] = useNodesState([])
+  const [edges] = useEdgesState([])
+
+  let nextNodeId = initialNode;
+
+  const [parentPosition] = useState({
+    x: getColumnPosition("lCentral", columns),
+    y: 50,
+    column: "central"
+  });
+
+  const formatNode = (currentNodeIndex) => {
+    let currentNode = initialNodes[currentNodeIndex];
+
+    currentNode.position = {x: parentPosition.x, y: parentPosition.y + 80};
+    currentNode.column = parentPosition.column;
+
+    parentPosition.x = currentNode.position.x
+    parentPosition.y = currentNode.position.y
+    parentPosition.column = currentNode.column;
+
+    switch (currentNode.type){
+      case TASK_KEY: case START_KEY:
+        nextNodeId=currentNode.details.nextNode;
+        break;
+
+      case CONDITIONAL_KEY:
+        const nodeSize = 100
+        let endPosition   = nodeSize * currentNode.details.nextNode.length;
+        let startPosition = (-Math.abs((endPosition/2)));
+
+        let newColumn;
+        let columnGap;
+        currentNode.details.nextNode.forEach((conditionalResult, index) => {
+
+          //START
+          //setColumns that use prevBaseColumn as base
+          //if(isEqualToCentralPosition(columns, ) && !columnCanBeAtCenter(currentNode.details.nextNode.length)){
+
+
+        })
+
+        break;
 
     }
 
-
+    setNodes(latest => [...latest, currentNode])
+    initialNodes.splice(currentNodeIndex, 1)
   }
 
-  const [nodes, setNodes] = useNodesState(initialNodes)
+  useEffect(() => {
+    do{
+      let currentNodeIndex = initialNodes.findIndex(node => node.id === nextNodeId);
 
+      if(currentNodeIndex>=0) {
+        formatNode(currentNodeIndex)
+      }else{
+        initialNodes = []
+        console.log('error')
+      }
+    }while(initialNodes.length > 1)
+  })
 
+  const changeColumn = () => {
+    console.log("mudamos")
+    columns['central'] = 800
 
-  const onNodeClick = (event, node) => alert(JSON.stringify(node));
+    setNodes(latest => {
+      return latest.map(node => {
+        node.position.x = getColumnPosition(node?.column, columns);
+        return node;
+      })
+    })
+  }
+
 
   return (
-    <div style={{ width: '60vw', height: '70vh' }}>
+    <div style={{ width: '70vw', height: '100vh' }}>
       <ReactFlow
         nodes={nodes}
-        // edges={edges} 
+        edges={edges}
         onNodeClick={onNodeClick}
         nodeTypes={nodeTypes}
       >
-
         <MiniMap  style={{ "backgroundColor": "#c2c2c2"}}/>
         <Controls/>
         <Background style={{ "backgroundColor": "#dcdcdc"}}/>
       </ReactFlow>
+
+      {columns["central"]}
+
+      <button onClick={changeColumn}>mudar</button>
     </div>
   );
 };

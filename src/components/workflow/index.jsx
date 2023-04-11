@@ -21,12 +21,24 @@ const getColumnPosition = (columnName, columns) => {
   return (columnName === "central") ? currentColumn : (getColumnPosition(currentColumn.baseColumn, columns) + currentColumn.gap)
 }
 
-let isEqualToCentralPosition = (columns, currentPosition) => {
-  return centralPosition === currentPosition;
-}
+const getGap = (currentIndex, totalLength) => {
+  const gap = 100
 
-let columnCanBeAtCenter = (length) => {
-  return ((length%2) === 0)
+  let middlePosition  = (parseInt(totalLength)/2)
+  let currentPosition = currentIndex++;
+
+  if( currentPosition <  middlePosition ){ 
+    return -Math.abs(gap); 
+  }else 
+  if( currentPosition == middlePosition && totalLength%2 === 0 ){
+    return 0;
+  }   
+
+  return gap;
+} 
+
+const formatNewColumn (currentIndex, totalLength, parentColumn) => {
+  
 }
 
 // const formatEdge = (parentNodeId, currentNodeId) => {
@@ -40,7 +52,6 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
   const nodeTypes = { conditional: ConditionalNode, start: ConditionalNode, task: ConditionalNode, final: ConditionalNode};
 
   const [columns]  = useState({"central": 260, "lCentral":{baseColumn: "central", gap: -110} })
-
   const [nodes, setNodes] = useNodesState([])
   const [edges] = useEdgesState([])
 
@@ -68,9 +79,6 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
         break;
 
       case CONDITIONAL_KEY:
-        const nodeSize = 100
-        let endPosition   = nodeSize * currentNode.details.nextNode.length;
-        let startPosition = (-Math.abs((endPosition/2)));
 
         let newColumn;
         let columnGap;
@@ -78,7 +86,6 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
 
           //START
           //setColumns that use prevBaseColumn as base
-          //if(isEqualToCentralPosition(columns, ) && !columnCanBeAtCenter(currentNode.details.nextNode.length)){
 
 
         })

@@ -12,7 +12,7 @@ export const ConditionalNodeStyled = styled.div`
     align-items: center;
     justify-content: center;
   
-    transform: rotate(45deg);
+    transform: translateX(25px) rotate(45deg);
     p{
       transform: rotate(-45deg);
     }

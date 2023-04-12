@@ -42,8 +42,6 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
   const [nodes, setNodes] = useNodesState([])
   const [edges] = useEdgesState([])
   
-  console.log(initialNodes)
-
   let nextNodeId = initialNode;
 
   const [parentNode] = useState( { x: 260, y: 50, column: "central", id: "0"} );
@@ -68,15 +66,43 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
   const formatNewColumn = (currentIndex, totalLength, parentColumnName) => {
     let gapResult = getGap(currentIndex, totalLength)
     if(gapResult == 0) { return parentColumnName}
-    let columnName = Math.random().toString(36).substring(2, 8);
+    let newColumnName = Math.random().toString(36).substring(2, 8);
+
+    columns.push({name: newColumnName, baseColumn: parentColumnName, gap: gapResult})
     
-    columns.push({name: columnName, baseColumn: parentColumnName, gap: gapResult})
-    
-    return columnName;
+    columns.map(column => {
+      if( (getColumnPosition(column.name) === getColumnPosition(newColumnName)) && column.name != newColumnName ) {
+        columns.map(bColumn => {
+          if(bColumn.name == parentColumnName){
+            bColumn.parentColumnName = newColumnName
+          }
+        })
+
+        columns.map(me => {
+          if(me.name == newColumnName){
+            me.baseColumn = column.name
+          }
+        })
+      }
+    })
+    // if(alguma colna na mesma posição que a nova){
+      //as colunas que se baseiam na coluna que é igual a mim
+      //passa a me usar como referencia
+      //eu uso como referencia a coluna que () estavam usando
+        //as colunas que se baseiam na coluna que é igual a mim
+
+        //meuParentPassara a usar eu e eu o base dele
+      
+    //}
+  
+
+    return newColumnName;
   }
 
-  const formatNewEdge = (parentNodeId, currentNodeId) => {
-    console.log(`e${parentNodeId}-${currentNodeId}`)
+  const formatNewEdge = (currentNodeId, parentNodeId) => {
+    if(parentNodeId != "0"){
+      // console.log(`current: ${currentNodeId} parent: ${parentNodeId}` )
+    }
     // edges.push(
     //   {
     //     id: `e${parentNodeId}-${currentNodeId}`,
@@ -92,12 +118,11 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
     currentNode.position = {x: getColumnPosition(parentNode.column), y: parentNode.y + Y_GAP};
     currentNode.column = parentNode.column;
 
-    formatNewEdge(parentNode.id, currentNode.id)
-    updateParentNode(currentNode.position.x, currentNode.position.y, currentNode.column, currentNode.id)
-
     switch (currentNode.type){
       case TASK_KEY: case START_KEY:
         nextNodeId=currentNode.details.nextNode;
+        formatNewEdge(currentNode.id, nextNodeId)
+        updateParentNode(currentNode.position.x, currentNode.position.y, currentNode.column, currentNode.id)
         break;
 
       case CONDITIONAL_KEY:
@@ -108,9 +133,9 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
         currentNode.details.nextNode.forEach((conditionalResult, index) => {
           let columnName = formatNewColumn(index, currentNode.details.nextNode.length, currentNode.column);
           let nodeIndex  = initialNodes.findIndex(node => node.id === conditionalResult); 
-
           updateParentNode( getColumnPosition(columnName), prev_y_position, columnName, prev_parent_id )
-
+          
+          formatNewEdge(prev_parent_id, conditionalResult)
           formatNode(nodeIndex)
         })
 
@@ -118,27 +143,19 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
         
         break;
     }
-
+    
+    currentNode.data.label = currentNode.column;
     setNodes(latest => [...latest, currentNode])
     initialNodes.splice(currentNodeIndex, 1)
   }
 
   useEffect(() => {
-    do{
+    while(initialNodes.length > 0){
       let currentNodeIndex = initialNodes.findIndex(node => node.id === nextNodeId);
 
-      if( currentNodeIndex >= 0 ) {
-        formatNode(currentNodeIndex)
-      }
-      else{
-        initialNodes = []
-      }
-    }while(initialNodes.length > 1)
+      formatNode(currentNodeIndex)
+    }
   })
-
-  const enviarMudancas = () => {
-    console.log(document.getElementById("initial").value)
-  }
 
   return (
     <div style={{ width: '70vw', height: '100vh' }}>
@@ -152,9 +169,6 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
         <Controls/>
         <Background style={{ "backgroundColor": "#dcdcdc"}}/>
       </ReactFlow>
-
-      <input type="text" id="initial"/>
-      <button onClick={enviarMudancas}>Mudar</button>
     </div>
   );
 };

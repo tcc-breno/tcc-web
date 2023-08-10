@@ -1,4 +1,5 @@
 import {VariableListStyled} from './variableListStyled'
+import React  from 'react';
 
 export const VariableListComponent = ({ listOfVariables }) => {
 

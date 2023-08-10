@@ -1,8 +1,8 @@
 import {VariablePageStyled} from "./styled"
 import {VariableComponent}  from "../../components/variable/variableComponent"
-
 import React, { useState, useEffect } from 'react';
-import {axiosInstance} from "../../service/axios"
+import axiosInstance from "../../service/clients/baseClient"
+
 export const VariablePage = () => {
 
     const [listOfVariables, setListOfVariables] = useState([]);

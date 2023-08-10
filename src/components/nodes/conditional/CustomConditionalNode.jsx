@@ -1,5 +1,6 @@
 import { Handle, Position } from 'reactflow';
 import {ConditionalNodeStyled} from "./ConditionalNodeStyled"
+import React  from 'react';
 
 export const ConditionalNode = ({ data }) => {
 

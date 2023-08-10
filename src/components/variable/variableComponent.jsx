@@ -1,4 +1,5 @@
 import { VariableStyled } from "./variableStyled";
+import React  from 'react';
 
 import { VariableListComponent } from './list/variableListComponent'
 

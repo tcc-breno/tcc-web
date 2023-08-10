@@ -1,4 +1,5 @@
 import {VariableCreationStyled} from './variableCreationStyled'
+import React  from 'react';
 
 export const VariableCreationComponent = () => {
     return (

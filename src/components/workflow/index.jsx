@@ -54,25 +54,25 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
   const getColumnPosition = (columnName) => {
     let currentColumn = getColumn(columnName)
 
-    return (columnName == "central") ? currentColumn.gap : (getColumnPosition(currentColumn.baseColumn) + currentColumn.gap)
+    return (columnName === "central") ? currentColumn.gap : (getColumnPosition(currentColumn.baseColumn) + currentColumn.gap)
   }
 
   const formatNewColumn = (currentIndex, totalLength, parentColumnName) => {
     let gapResult = getGap(currentIndex, totalLength)
-    if(gapResult == 0) { return parentColumnName}
+    if(gapResult === 0) { return parentColumnName}
     
     let newColumnName = Math.random().toString(36).substring(2, 8);
     columns.push({name: newColumnName, baseColumn: parentColumnName, gap: gapResult})
     
-    let columnAtTheSamePosition = columns.filter(c => getColumnPosition(c.name) == getColumnPosition(newColumnName) && c.name != newColumnName)[0]
+    let columnAtTheSamePosition = columns.filter(c => getColumnPosition(c.name) === getColumnPosition(newColumnName) && c.name !== newColumnName)[0]
     if( columnAtTheSamePosition ){
       
       let fixedColumns = columns.map(column => {
-        if( column.name == newColumnName ){
+        if( column.name === newColumnName ){
           column.baseColumn = columnAtTheSamePosition.name;
           column.gap = (column.gap > 0) ? -Math.abs(column.gap) : Math.abs(column.gap); 
         }else
-        if( column.name == parentColumnName ){
+        if( column.name === parentColumnName ){
           column.baseColumn = newColumnName;
         }
 
@@ -86,11 +86,11 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
   }
 
   const formatNewEdge = (currentNodeId, parentNodeId) => {
-    if(parentNodeId != "0"){
+    if(parentNodeId !== "0"){
       edges.push(
         {
           id: `e${currentNodeId}-${parentNodeId}`,
-          type: "default",
+          // type: "step",
           source: currentNodeId, target: parentNodeId,
           makerEnd: {type: MarkerType.Arrow}, animated:false,
           style: {
@@ -100,7 +100,6 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
         }
       )
     }
-    
   }
 
   const reloadNodesPosition = () => {

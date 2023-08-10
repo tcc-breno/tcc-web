@@ -1,20 +1,25 @@
 import { LoginStyled } from "./styled"
+
 import React, { useState } from 'react';
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+
+import { useNavigate } from 'react-router-dom';
+import { login } from "../../../service/clients/userClient";
 import { PassInput } from "../../../components/form/input/index";
 import { validateLoginCredentials } from "../../../service/validators/userValidator";
-import { login } from "../../../service/clients/userClient";
 
 export const LoginPage = () => {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginErrors, setFormErrors] = useState({ email: '', password: '' });
+    const navigate = useNavigate();
 
     const verifyLoginFields = () => {
         let loginValidatorResult = validateLoginCredentials({ email: email, password:password })
@@ -32,11 +37,10 @@ export const LoginPage = () => {
             await login(email, password)
             .then(loginResponse => {
                 if( loginResponse === true ){ 
-                    alert('loged') 
+                    navigate('/');
                 }
                 else {
-                    alert('error')
-                    alert(loginResponse)
+                    //erro
                 }
 
             });

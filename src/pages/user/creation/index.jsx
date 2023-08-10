@@ -1,17 +1,21 @@
 import { CreationStyled } from "./styled"
-import { verifyUserAndEmailEligibility, validateAndComparePasswords } from "../../../service/validators/userValidator"
-import { createUser } from "../../../service/clients/userClient";
-
-import { isLoggedIn } from "../../../service/authService"
 
 import React, { useState } from 'react';
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from 'react-router-dom';
+import { PassInput } from "../../../components/form/input/index";
+
+import { createUser } from "../../../service/clients/userClient";
+import { isLoggedIn } from "../../../service/authService"
+import { verifyUserAndEmailEligibility, validateAndComparePasswords } from "../../../service/validators/userValidator"
 
 export const CreationPage = () => {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -55,13 +59,19 @@ export const CreationPage = () => {
         e.preventDefault();
         
         if ( await validateSecondStep() ){
-            //TODO
+            
             let userCreationResponse = await createUser({
                 "username": username,
                 "email":email,
                 "password":password
             });
-            //redirect
+
+            if( userCreationResponse == true){
+                navigate('/');
+            }
+            else{
+                
+            }
         }
     };
 
@@ -92,19 +102,12 @@ export const CreationPage = () => {
                         alignItems: 'center',
                     }}
                 >
-                    
                     <Box>
                         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} > 
                             Registro 
                         </Typography>
                     </Box>
-                    <Box 
-                        sx={{
-                            mt:'30px',
-                            width: '100%' 
-                        }}
-                    
-                    >
+                    <Box sx={{ mt:'30px', width: '100%' }} >
                         { formStep === 1 
                             ? (
                             <form onSubmit={ handleFirstStep }>
@@ -117,7 +120,6 @@ export const CreationPage = () => {
                                     fullWidth
                                     margin="normal"
                                 />
-                                
                                 <TextField
                                     label="Email"
                                     type="email"
@@ -139,25 +141,15 @@ export const CreationPage = () => {
                             </form>
                             ):(
                             <form onSubmit={ handleSecondStep }>
-                                <TextField
+                                <PassInput
                                     label="Senha"
-                                    type="password"
-                                    value={ password }
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    error={!!formErrors.password}
-                                    helperText={formErrors.password}
-                                    fullWidth
-                                    margin="normal"
+                                    error={ formErrors.password }
+                                    onChange={ (e) => { setPassword(e.target.value ) } }
                                 />
-                                <TextField
+                                <PassInput
                                     label="Confirmar Senha"
-                                    type="password"
-                                    value={ passwordConfirmation }
-                                    onChange={(e) => setPasswordConfirmation(e.target.value)}
-                                    error={!!formErrors.passwordConfirmation}
-                                    helperText={formErrors.passwordConfirmation} 
-                                    fullWidth
-                                    margin="normal"
+                                    error={ formErrors.passwordConfirmation }
+                                    onChange={ (e) => { setPasswordConfirmation(e.target.value ) } }
                                 />
                                 <Button type="submit" variant="contained" color="primary">
                                     Cadastrar

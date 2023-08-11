@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from 'react-router-dom';
 import { PassInput } from "../../../components/form/input/index";
+// import { Alert } from "../"
 
 import { createUser } from "../../../service/clients/userClient";
 import { isLoggedIn } from "../../../service/authService"
@@ -70,7 +71,7 @@ export const CreationPage = () => {
                 navigate('/');
             }
             else{
-                
+                // <Alert severity="error">This is an error message!</Alert>
             }
         }
     };

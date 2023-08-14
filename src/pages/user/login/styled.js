@@ -16,7 +16,7 @@ export const LoginStyled = styled.div`
     .login{
         background-color: rgba(255,255,255,1);
         border-radius: 6px;
-        padding: 50px;
+        padding: 40px;
         -webkit-box-shadow: 0px 0px 28px -3px rgba(153,153,153,1);
         -moz-box-shadow: 0px 0px 28px -3px rgba(153,153,153,1);
         box-shadow: 0px 0px 28px -3px rgba(153,153,153,1);

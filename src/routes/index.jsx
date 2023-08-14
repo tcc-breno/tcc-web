@@ -17,7 +17,7 @@ export const AppRoutes = () => {
 
           <Route path="/var"    element={ <VariablePage/> } />
 
-          <Route path="/"           element={ <Home/> } />
+          <Route path="/"           element={ <RequireAuth> <Home/> </RequireAuth>} />
           <Route path="/login"      element={ <LoginPage/> } />
           <Route path="/registro"   element={ <CreationPage/> } />
       </Routes>

@@ -1,5 +1,7 @@
-import {InteractionFlow} from "../components/workflow/"
 import React  from 'react';
+
+import Header from "../components/header/index";
+import { InteractionFlow } from "../components/workflow/"
 
 export const Home = () => {
 
@@ -17,6 +19,7 @@ export const Home = () => {
 
     return (
         <div>
+            <Header/>
             <InteractionFlow initialNode={initialNode} initialNodes = {initialNodes} />
         </div>
     )

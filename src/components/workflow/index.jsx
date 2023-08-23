@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, {useEffect, useState} from 'react';
 import ReactFlow, { useNodesState, useEdgesState, MiniMap, Controls, Background, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -156,7 +155,7 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
   })
 
   return (
-    <div style={{ width: '70vw', height: '100vh' }}>
+    <div style={{ width: '70vw', height: '92vh' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

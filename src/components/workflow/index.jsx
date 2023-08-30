@@ -28,7 +28,7 @@ const getGap = (currentIndex, totalLength) => {
   return X_GAP;
 } 
 
-export const InteractionFlow = ({initialNodes, initialNode}) => {
+export default ({initialNodes, initialNode, isInfoPanelOpen }) => {
   const nodeTypes = { conditional: ConditionalNode, start: ConditionalNode, task: ConditionalNode, final: ConditionalNode};
 
   const [columns, setColumns]  = useState( [{name:"central", gap: 260 }] )
@@ -155,7 +155,7 @@ export const InteractionFlow = ({initialNodes, initialNode}) => {
   })
 
   return (
-    <div style={{ width: '70vw', height: '92vh' }}>
+    <div style={{ width:(isInfoPanelOpen) ? '100vw':'70vw', height: '92vh' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

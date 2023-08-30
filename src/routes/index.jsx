@@ -4,6 +4,7 @@ import { RequireAuth } from '../components/auth';
 
 import { Home } from '../pages/home';
 import { VariablePage} from "../pages/variavel/index";
+import { Simulation } from "../pages/simulation/index"
 
 import { LoginPage }   from "../pages/user/login/index";
 import { CreationPage }   from "../pages/user/creation/index";
@@ -17,8 +18,9 @@ export const AppRoutes = () => {
           {/* <Route path="/"           element={ <RequireAuth> <Home/> </RequireAuth>} /> */}
           {/* TODO: add require auth */}
           <Route path="/"           element={ <Home/>} />
-          <Route path="/login"      element={ <LoginPage/>    } />
-          <Route path="/registro"   element={ <CreationPage/> } />
+          <Route path="/login"      element={ <LoginPage/>     } />
+          <Route path="/registro"   element={ <CreationPage/>  } />
+          <Route path="/s"          element={ <Simulation/>} />
       </Routes>
     </BrowserRouter>
   )
